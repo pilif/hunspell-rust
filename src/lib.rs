@@ -17,7 +17,6 @@ extern crate hunspell_sys;
 
 use std::ffi::{CString, CStr};
 use std::ptr::null_mut;
-use std::os::raw::c_char;
 
 use hunspell_sys::*;
 
@@ -49,8 +48,6 @@ fn stem() {
     let cat_stem = hs.stem("cats");
     assert!(cat_stem[0] == "cat");
 }
-
-type CStringList = *mut *mut i8;
 
 pub struct Hunspell {
     handle: *mut Hunhandle
