@@ -13,10 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+extern crate hunspell_sys;
 
 use std::ffi::{CString, CStr};
 use std::ptr::null_mut;
 use std::os::raw::c_char;
+
+use hunspell_sys::*;
 
 #[test]
 fn create_and_destroy() {
@@ -45,31 +48,6 @@ fn stem() {
                            "/usr/share/hunspell/en_US.dic");
     let cat_stem = hs.stem("cats");
     assert!(cat_stem[0] == "cat");
-}
-
-enum Hunhandle {}
-
-#[link(name = "hunspell")]
-extern {
-    fn Hunspell_create(affpath: *const i8, dpath: *const i8) -> *mut Hunhandle;
-    fn Hunspell_create_key(affpath: *const i8, dpath: *const i8, key: *const i8) -> *mut Hunhandle;
-    fn Hunspell_destroy(pHunspell: *mut Hunhandle);
-
-    fn Hunspell_spell(pHunspell: *mut Hunhandle, word: *const i8) -> i32;
-    fn Hunspell_get_dic_encoding(pHunspell: *mut Hunhandle) -> *mut i8;
-
-    fn Hunspell_suggest(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, word: *const i8) -> i32;
-    fn Hunspell_analyze(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, word: *const i8) -> i32;
-    fn Hunspell_stem(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, word: *const i8) -> i32;
-    fn Hunspell_stem2(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, desc: *mut *mut i8, n: i32) -> i32;
-    fn Hunspell_generate(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, word: *const i8, word2: *const i8) -> i32;
-    fn Hunspell_generate2(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, word: *const i8, desc: *mut *mut i8, n: i32) -> i32;
-
-    fn Hunspell_add(pHunspell: *mut Hunhandle, word: *const i8) -> i32;
-    fn Hunspell_add_with_affix(pHunspell: *mut Hunhandle, word: *const i8, example: *const i8) -> i32;
-    fn Hunspell_remove(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, n: i32) -> i32;
-
-    fn Hunspell_free_list(pHunspell: *mut Hunhandle, slst: *mut *mut *mut i8, n: i32);
 }
 
 type CStringList = *mut *mut i8;
