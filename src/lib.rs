@@ -15,13 +15,13 @@
 */
 extern crate hunspell_sys;
 
-use std::ffi::{CString, CStr};
+use std::ffi::{CStr, CString};
 use std::ptr::null_mut;
 
 use hunspell_sys::*;
 
 pub struct Hunspell {
-    handle: *mut Hunhandle
+    handle: *mut Hunhandle,
 }
 
 macro_rules! extract_vec {
@@ -50,7 +50,7 @@ impl Hunspell {
         let dicpath = CString::new(dicpath).unwrap();
         unsafe {
             Hunspell {
-                handle: Hunspell_create(affpath.as_ptr(), dicpath.as_ptr())
+                handle: Hunspell_create(affpath.as_ptr(), dicpath.as_ptr()),
             }
         }
     }
@@ -61,17 +61,14 @@ impl Hunspell {
         let key = CString::new(key).unwrap();
         unsafe {
             Hunspell {
-                handle: Hunspell_create_key(affpath.as_ptr(), dicpath.as_ptr(),
-                                            key.as_ptr())
+                handle: Hunspell_create_key(affpath.as_ptr(), dicpath.as_ptr(), key.as_ptr()),
             }
         }
     }
 
     pub fn check(&self, word: &str) -> bool {
         let word = CString::new(word).unwrap();
-        unsafe {
-            Hunspell_spell(self.handle, word.as_ptr()) == 1
-        }
+        unsafe { Hunspell_spell(self.handle, word.as_ptr()) == 1 }
     }
 
     pub fn suggest(&self, word: &str) -> Vec<String> {
@@ -92,7 +89,12 @@ impl Hunspell {
     pub fn generate(&self, word1: &str, word2: &str) -> Vec<String> {
         let word1 = CString::new(word1).unwrap();
         let word2 = CString::new(word2).unwrap();
-        extract_vec!(Hunspell_generate, self.handle, word1.as_ptr(), word2.as_ptr())
+        extract_vec!(
+            Hunspell_generate,
+            self.handle,
+            word1.as_ptr(),
+            word2.as_ptr()
+        )
     }
 }
 
@@ -110,29 +112,25 @@ mod tests {
 
     #[test]
     fn create_and_destroy() {
-        let _hs = Hunspell::new("tests/fixtures/reduced.aff",
-                               "tests/fixtures/reduced.dic");
+        let _hs = Hunspell::new("tests/fixtures/reduced.aff", "tests/fixtures/reduced.dic");
     }
 
     #[test]
     fn check() {
-        let hs = Hunspell::new("tests/fixtures/reduced.aff",
-                               "tests/fixtures/reduced.dic");
+        let hs = Hunspell::new("tests/fixtures/reduced.aff", "tests/fixtures/reduced.dic");
         assert!(hs.check("cats"));
         assert!(!hs.check("nocats"));
     }
 
     #[test]
     fn suggest() {
-        let hs = Hunspell::new("tests/fixtures/reduced.aff",
-                               "tests/fixtures/reduced.dic");
+        let hs = Hunspell::new("tests/fixtures/reduced.aff", "tests/fixtures/reduced.dic");
         assert!(hs.suggest("progra").len() > 0);
     }
 
     #[test]
     fn stem() {
-        let hs = Hunspell::new("tests/fixtures/reduced.aff",
-                               "tests/fixtures/reduced.dic");
+        let hs = Hunspell::new("tests/fixtures/reduced.aff", "tests/fixtures/reduced.dic");
         let cat_stem = hs.stem("cats");
         assert!(cat_stem[0] == "cat");
     }
