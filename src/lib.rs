@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn create_and_destroy() {
-        let hs = Hunspell::new("tests/fixtures/reduced.aff",
+        let _hs = Hunspell::new("tests/fixtures/reduced.aff",
                                "tests/fixtures/reduced.dic");
     }
 
