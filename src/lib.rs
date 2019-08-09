@@ -13,7 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-extern crate hunspell_sys;
 
 use std::ffi::{CStr, CString};
 use std::ptr::null_mut;
