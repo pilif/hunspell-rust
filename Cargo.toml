@@ -10,4 +10,4 @@ repository = "https://github.com/lipk/hunspell-rust"
 edition = "2018"
 
 [dependencies]
-hunspell-sys = "0.1.2"
+hunspell-sys = "0.1.3"
